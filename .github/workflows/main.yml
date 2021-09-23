@@ -23,10 +23,7 @@ jobs:
      - name: Start Docker
        if: ${{ failure() }}
        run: |
-         mkdir jd-qinglong
-         cd jd-qinglong
-         wget -O env.properties https://raw.githubusercontent.com/rubyangxg/jd-qinglong/master/env.template.propertie
-         docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=1 -v $(pwd)/env.template.propertie:/env.properties rubyangxg/jd-qinglong:allinone
+         docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=1 -v $(pwd)/env.propertie:/env.properties rubyangxg/jd-qinglong:allinone
  
      - name: Don't kill instace
        if: ${{ failure() }}
