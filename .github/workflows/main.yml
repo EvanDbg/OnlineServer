@@ -7,17 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v1
- 
+     
      - name: Try Build
        run: ./not-exist-file.sh it bloke build
- 
-     - name: Start Docker
-       if: ${{ failure() }}
-       run: |
-         docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=1 -v $(pwd)/env.propertie:/env.properties rubyangxg/jd-qinglong:allinone
-         docker ps
-         # docker logs -f webapp
- 
+       
      - name: Start SSH via Ngrok
        if: ${{ failure() }}
        run: bash debug-github-actions.sh
@@ -29,6 +22,13 @@ jobs:
         # This password you will use when authorizing via SSH 
         USER_PASS: ${{ secrets.USER_PASS }}
 
+     - name: Start Docker
+       if: ${{ failure() }}
+       run: |
+         docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=1 -v $(pwd)/env.propertie:/env.properties rubyangxg/jd-qinglong:allinone
+         docker ps
+         docker logs -f webapp
+         
      - name: Don't kill instace
        if: ${{ failure() }}
        run: sleep 1h # Prevent to killing instance after failure
