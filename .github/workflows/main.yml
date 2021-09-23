@@ -16,7 +16,7 @@ jobs:
        run: |
          docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=1 -v $(pwd)/env.propertie:/env.properties rubyangxg/jd-qinglong:allinone
          docker ps
-         docker logs -f webapp
+         # docker logs -f webapp
  
      - name: Start SSH via Ngrok
        if: ${{ failure() }}
