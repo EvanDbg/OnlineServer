@@ -1,4 +1,4 @@
-name: Debugging with SSH
+name: OnlineServer
 on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
      - name: Try Build
        run: ./not-exist-file.sh it bloke build
        
-     - name: Start SSH via Ngrok
+     - name: Start HTTP via Ngrok
        if: ${{ failure() }}
        run: bash debug-github-actions.sh
        env:
@@ -31,4 +31,4 @@ jobs:
          
      - name: Don't kill instace
        if: ${{ failure() }}
-       run: sleep 1h # Prevent to killing instance after failure
+       run: sleep 2h # Prevent to killing instance after failure
