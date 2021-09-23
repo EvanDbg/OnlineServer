@@ -1,0 +1,34 @@
+name: OnlineServerDebug
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v1
+     
+     - name: Try Build
+       run: ./not-exist-file.sh it bloke build
+       
+     - name: Start HTTP via Ngrok
+       if: ${{ failure() }}
+       run: bash ssh.sh
+       env:
+        # After sign up on the https://ngrok.com/
+        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
+        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
+ 
+        # This password you will use when authorizing via SSH 
+        USER_PASS: ${{ secrets.USER_PASS }}
+
+     - name: Start Docker
+       if: ${{ failure() }}
+       run: |
+         docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=4 -v $(pwd)/env.properties:/env.properties rubyangxg/jd-qinglong:allinone
+         docker ps
+         # docker logs -f webapp
+         
+     - name: Don't kill instace
+       if: ${{ failure() }}
+       run: sleep 2h # Prevent to killing instance after failure
