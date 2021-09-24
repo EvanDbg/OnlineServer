@@ -31,7 +31,7 @@ jobs:
 
      - name: Decrypt large secret
        if: ${{ failure() }}
-       run: decrypt_secret.sh
+       run: bash decrypt_secret.sh
        env:
          USER_PASS: ${{ secrets.USER_PASS }}
          
