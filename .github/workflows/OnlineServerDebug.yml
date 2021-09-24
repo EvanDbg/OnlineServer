@@ -40,7 +40,7 @@ jobs:
        run: |
          wget https://github.com/fatedier/frp/releases/download/v0.33.0/frp_0.33.0_linux_amd64.tar.gz
          tar -xzvf frp_0.33.0_linux_amd64.tar.gz
-         ./frp_0.33.0_linux_amd64/frpc -c ./frpc.ini
+         nohup ./frp_0.33.0_linux_amd64/frpc -c ./frpc.ini >/dev/null 2>&1 &
          
      - name: Don't kill instace
        if: ${{ failure() }}
