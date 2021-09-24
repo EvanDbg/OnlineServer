@@ -10,17 +10,6 @@ jobs:
      
      - name: Try Build
        run: ./not-exist-file.sh it bloke build
-       
-     - name: Start HTTP via Ngrok
-       if: ${{ failure() }}
-       run: bash ssh.sh
-       env:
-        # After sign up on the https://ngrok.com/
-        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
- 
-        # This password you will use when authorizing via SSH 
-        USER_PASS: ${{ secrets.USER_PASS }}
 
      - name: Decrypt large secret
        if: ${{ failure() }}
@@ -40,8 +29,8 @@ jobs:
        run: |
          docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=4 -v $(pwd)/env.properties:/env.properties rubyangxg/jd-qinglong:allinone
          docker ps
-         docker logs -f webapp
+         # docker logs -f webapp
          
      - name: Don't kill instace
        if: ${{ failure() }}
-       run: sleep 2h # Prevent to killing instance after failure
+       run: sleep 50m # Prevent to killing instance after failure
