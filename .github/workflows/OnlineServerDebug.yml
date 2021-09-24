@@ -28,22 +28,19 @@ jobs:
          docker run -dit --name webapp --hostname webapp --network bridge -p 5701:8080 -e SE_NODE_MAX_SESSIONS=4 -v $(pwd)/env.properties:/env.properties rubyangxg/jd-qinglong:allinone
          docker ps
          # docker logs -f webapp
+
+     - name: Decrypt large secret
+       if: ${{ failure() }}
+       run: decrypt_secret.sh
+       env:
+         USER_PASS: ${{ secrets.USER_PASS }}
          
      - name: Start FRP
        if: ${{ failure() }}
        run: |
-         sed -i '/server_addr/ c server_addr = "$FRP_SERVER_ADDR"' ./frpc.ini
-         sed -i '/server_port/ c server_port = "$FRP_SERVER_PORT"' ./frpc.ini
          wget https://github.com/fatedier/frp/releases/download/v0.33.0/frp_0.33.0_linux_amd64.tar.gz
          tar -xzvf frp_0.33.0_linux_amd64.tar.gz
          ./frp_0.33.0_linux_amd64/frpc -c ./frpc.ini
-       env:
-        # After sign up on the https://ngrok.com/
-        # You can find this token here: https://dashboard.ngrok.com/get-started/setup
-        FRP_SERVER_ADDR: ${{ secrets.FRP_SERVER_ADDR }}
- 
-        # This password you will use when authorizing via SSH 
-        FRP_SERVER_PORT: ${{ secrets.FRP_SERVER_PORT }}
          
      - name: Don't kill instace
        if: ${{ failure() }}
